@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from dundie.db import ActiveSession
+from dundie.routes.user import router as user_router
 
 app = FastAPI(
     title="dundie",
@@ -7,12 +7,4 @@ app = FastAPI(
     description="dundie is a rewards API",
 )
 
-
-from dundie.models import User
-from sqlmodel import Session, select
-from dundie.models.user import UserResponse
-
-
-@app.get("/", response_model=UserResponse)
-def hello(session: Session = ActiveSession):
-    return session.exec(select(User)).first
+app.include_router(user_router, prefix="/user", tags=["user"])
